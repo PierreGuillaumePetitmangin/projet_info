@@ -6,7 +6,7 @@ The ant move forward to an adjacent tile.
 This process is repeated at each step. The ant starts on a white tile and follows the sequence of instructions described above.'''
 
 import pygame
-from ant import Ant
+from ANT.ant import Ant
 from grid import Grid
 from settings import Settings
 import sys
