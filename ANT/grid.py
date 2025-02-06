@@ -7,7 +7,7 @@ class Grid :
         self.tile_height = self.settings.screen_height // self.settings.grid_height
         self.grid = [[0 for _ in range(self.settings.grid_width)] for _ in range(self.settings.grid_height)]
 
-    def draw_grid(self):
+    def draw_grid(self) -> None:
         for i in range(self.settings.grid_height):
             for j in range(self.settings.grid_width):
                 if self.grid[i][j] == 0:

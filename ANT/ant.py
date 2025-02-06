@@ -1,12 +1,12 @@
-from ..direction import Direction
+from .direction import Direction
 class Ant :
-    def __init__(self, grid):
+    def __init__(self, grid : 'Grid') -> None:
         self.grid = grid
         self.x = self.grid.cols // 2
         self.y = self.grid.rows // 2
         self.direction = 0
 
-    def move(self):
+    def move(self) -> None:
         if self.grid.grid[self.y][self.x] == 0:
             self.direction = (self.direction + 1) % 4
             self.grid.grid[self.y][self.x] = 1

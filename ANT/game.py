@@ -12,7 +12,7 @@ from settings import Settings
 import sys
 
 class Game:
-    def __init__(self):
+    def __init__(self) -> None:
         pygame.init()
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
@@ -20,7 +20,7 @@ class Game:
         self.grid = Grid(self.settings, self.screen)
         self.ant = Ant(self.grid)
 
-    def run_game(self):
+    def run_game(self) -> None:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
