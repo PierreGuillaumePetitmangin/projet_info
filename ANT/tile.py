@@ -2,14 +2,12 @@ import pygame
 from .settings import Settings
 
 class Tile :
-    def __init__(self, x, y,color) -> None:
+    def __init__(self, x, y,color,size) -> None:
         self._x = x
         self._y = y
         self._color = color
         self._settings = Settings()
-        self._width = self._settings.grid_width
-        self._height = self._settings.grid_height
-        self.size = self._settings.grid_size
+        self.size = self._settings.tile_size
     @property
     def x(self) -> int:
         """The x coordinate (i.e.: column index) of the tile."""
@@ -39,7 +37,7 @@ class Tile :
         """Change the color of the tile."""
         self._color = color
 
-    def draw(self, screen: pygame.Surface, ) -> None:
-        """Draw the tile on screen."""
-        rect = pygame.Rect(self._x * self.size, self._y*self.size, self._width, self._height)
-        pygame.draw.rect(screen, self.color, rect)
+    def draw(self, screen) -> None:
+        pygame.draw.rect(screen, self.color, (self.x * self.size, self.y * self.size, self.size, self.size))
+
+    

@@ -10,36 +10,73 @@ from .ant import Ant
 from .grid import Grid
 from .settings import Settings
 import sys
+from .exceptions import Exceptions
+from .tile import Tile
+from .direction import Direction
 
 class Game:
-    def __init__(self) -> None:
-        pygame.init()
-        self.settings = Settings()
-        self.grid = Grid()
-        self.ant = Ant(5,5)
-        self.grid_width = self.settings.grid_width
-        self.grid_height = self.settings.grid_height
+    def __init__(self, settings) -> None:
+        self.grid = Grid(settings.grid_size, settings.grid_size)
+        self.ant = Ant(settings.grid_size // 2, settings.grid_size // 2, self.grid)
+        self.steps = settings.steps
+        self.gui = settings.gui
+        self.direction = self.ant.direction
 
+        
+        if self.gui:
+            print('gui')
+            pygame.init()
+            self.screen = pygame.display.set_mode((settings.screen_size, settings.screen_size))
+            pygame.display.set_caption("Langton's Ant")
+            self.clock = pygame.time.Clock()
+            self.tile_size = settings.tile_size
 
     def process(self) -> None:
-        '''The ant is moving '''
         x, y = self.ant.x, self.ant.y
-        if self.grid.grid[x][y] == 0:  #if the cell is white
-            self.grid.change(x, y)
-            self.ant.turn()  # Turn right
-        else:  # if the cell is black
-            self.grid.change(x, y)
-            self.ant.turn()  # Turn left
+        self.ant.turn()
+        self.grid.change(x, y)
         self.ant.move()
-    
-   
 
-    def run_game(self) -> None:
-        for i in range(10):
+    def run(self) -> None:
+        for step in range(self.steps):
+            if self.gui :
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
             self.process()
-            self.grid.print(i,self.ant.x,self.ant.y,self.ant.direction)
+            if not self.gui:
+                self.grid.print_grid(step, self.ant.x, self.ant.y, self.ant.direction)
+            else:
+                self.render()
+                self.clock.tick(10)
+        if self.gui:
+            pygame.quit()
 
+    def draw_arrow(self,x, y, direction):
+        if direction == Direction.UP:  # Haut
+            points = [(x, y), (x - 5, y + 10), (x + 5, y + 10)]
+        elif direction == Direction.RIGHT:  # Droite
+            points = [(x, y), (x - 10, y - 5), (x - 10, y + 5)]
+        elif direction == Direction.DOWN:  # Bas
+            points = [(x, y), (x - 5, y - 10), (x + 5, y - 10)]
+        elif direction == Direction.LEFT:  # Gauche
+            points = [(x, y), (x + 10, y - 5), (x + 10, y + 5)]
+        
+        
+        pygame.draw.polygon(self.screen , (255,255,0), points)
 
+    def render(self) -> None:
+        self.screen.fill((255, 255, 255))
+        for y in range(self.grid.height):
+            for x in range(self.grid.width):
+                color = (0, 0, 0) if self.grid.grid[y][x] == 1 else (255, 255, 255)
+                Tile(x, y, color, self.tile_size).draw(self.screen)
+        Tile(self.ant.x, self.ant.y, (255, 0, 0), self.tile_size).draw(self.screen)
+        Game.draw_arrow(self,self.ant.x * self.tile_size + self.tile_size // 2, self.ant.y * self.tile_size + self.tile_size // 2, self.direction)
+        pygame.display.flip()
+            
+            
             
 
 
