@@ -1,18 +1,28 @@
 import pygame
-class Grid :
-    def __init__(self, settings, screen):
-        self.settings = settings
-        self.screen = screen
-        self.tile_width = self.settings.screen_width // self.settings.grid_width
-        self.tile_height = self.settings.screen_height // self.settings.grid_height
-        self.grid = [[0 for _ in range(self.settings.grid_width)] for _ in range(self.settings.grid_height)]
+from .settings import Settings
+import numpy as np
+class Grid(Settings) :
+    def __init__(self) -> None:
+        super().__init__()
+        self.settings = Settings()
+        self.grid = [[np.random.choice([0,1]) for k in range(self.settings.grid_width)] for j in range(self.settings.grid_height)]
+        self.height = self.settings.grid_height
+        self.width = self.settings.grid_width
+    
+        
 
-    def draw_grid(self) -> None:
-        for i in range(self.settings.grid_height):
-            for j in range(self.settings.grid_width):
-                if self.grid[i][j] == 0:
-                    color = self.settings.white
-                else:
-                    color = self.settings.black
-                pygame.draw.rect(self.screen, color, (j * self.tile_width, i * self.tile_height, self.tile_width, self.tile_height))
-                pygame.draw.rect(self.screen, self.settings.grid_color, (j * self.tile_width, i * self.tile_height, self.tile_width, self.tile_height), 1)
+
+    def change(self,x,y) -> None :
+        self.grid[x][y] = 1 - self.grid[x][y]
+    
+    def print(self,i,x,y,direction):
+        '''print the grid'''
+        print('step',i)
+        print('X = ',x,'Y = ',y,'direction = ',direction)
+        for ligne in self.grid:
+            
+            print(' '.join(['#' if cell == 1 else '.' for cell in ligne]))
+
+
+
+    
